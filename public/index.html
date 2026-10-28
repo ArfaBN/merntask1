@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventory & Item Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Toast Notifications Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <div class="app-container">
+    
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-badge">
+        <span class="badge-dot"></span>
+        <span>MERN Stack Item Manager</span>
+      </div>
+      <h2>Inventory Dashboard</h2>
+      <p>Manage, track, and update items with real-time operations</p>
+    </header>
+
+    <!-- Stats Overview Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-blue">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <span class="stat-label">Total Items</span>
+          <span class="stat-value" id="stat-total-items">0</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-green">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 3h12"></path>
+            <path d="M6 8h12"></path>
+            <path d="M6 13l8.5 8"></path>
+            <path d="M6 13h3"></path>
+            <path d="M9 13c6.667 0 6.667-10 0-10"></path>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <span class="stat-label">Total Value</span>
+          <span class="stat-value" id="stat-total-value">₹0.00</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input Form Card -->
+    <div class="card form-card">
+      <div class="card-header">
+        <h3 id="form-title">Add New Item</h3>
+        <p id="form-subtitle">Fill in the item details below to add it to your inventory</p>
+      </div>
+
+      <form id="item-form">
+        <input type="hidden" id="item-id">
+
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="item-name">Item Name</label>
+            <div class="input-wrapper">
+              <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                <line x1="7" y1="7" x2="7.01" y2="7"></line>
+              </svg>
+              <input 
+                type="text" 
+                id="item-name" 
+                placeholder="e.g. Wireless Mouse" 
+                required 
+                autocomplete="off"
+              >
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="item-price">Price (₹)</label>
+            <div class="input-wrapper">
+              <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 3h12"></path>
+                <path d="M6 8h12"></path>
+                <path d="M6 13l8.5 8"></path>
+                <path d="M6 13h3"></path>
+                <path d="M9 13c6.667 0 6.667-10 0-10"></path>
+              </svg>
+              <input 
+                type="number" 
+                id="item-price" 
+                placeholder="0.00" 
+                step="any" 
+                min="0"
+                required
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" id="cancel-btn" class="btn btn-secondary" style="display: none;">Cancel</button>
+          <button type="submit" id="submit-btn" class="btn btn-primary">
+            <span id="submit-btn-text">Add Item</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Data Table Card -->
+    <div class="card table-card">
+      <div class="table-toolbar">
+        <div class="table-title">
+          <h3>Items List</h3>
+          <span class="count-badge" id="count-badge">0 items</span>
+        </div>
+        <div class="search-box">
+          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="search-input" placeholder="Search items...">
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table id="items-table">
+          <thead>
+            <tr>
+              <th style="width: 110px;">S.No</th>
+              <th>Item Name</th>
+              <th style="width: 140px;">Price (₹)</th>
+              <th style="width: 160px; text-align: center;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="items-tbody">
+            <!-- Dynamically injected rows -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
